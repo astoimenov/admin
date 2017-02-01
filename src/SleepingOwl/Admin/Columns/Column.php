@@ -9,7 +9,7 @@ use SleepingOwl\Admin\Models\ModelItem;
  * Class Column
  *
  * @method static \SleepingOwl\Admin\Columns\Column\Image image($name, $label = null)
- * @method static \SleepingOwl\Admin\Columns\Column\String string($name, $label = null)
+ * @method static \SleepingOwl\Admin\Columns\Column\ColumnString string($name, $label = null)
  * @method static \SleepingOwl\Admin\Columns\Column\Date date($name, $label = null)
  * @method static \SleepingOwl\Admin\Columns\Column\Lists lists($name, $label = null)
  * @method static \SleepingOwl\Admin\Columns\Column\Count count($name, $label = null)
@@ -47,6 +47,18 @@ class Column
 		}
 
 		return $column;
+	}
+
+    /**
+	 * PHP7 support # Cannot use 'String' as class name as it is reserved
+	 *
+	 * @param $name
+	 * @param null $label
+	 * @return ColumnInterface
+	 */
+	public static function string($name, $label = null)
+	{
+		return self::__callStatic('ColumnString', func_get_args());
 	}
 
 	/**
