@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
-use Collective\Html\FormBuilder as IlluminateFormBuilder;
+use Illuminate\Html\FormBuilder as IlluminateFormBuilder;
 use Illuminate\Support\ViewErrorBag;
 use Lang;
 use SleepingOwl\DateFormatter\DateFormatter;
