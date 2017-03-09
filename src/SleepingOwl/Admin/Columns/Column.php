@@ -1,4 +1,6 @@
-<?php namespace SleepingOwl\Admin\Columns;
+<?php
+
+namespace SleepingOwl\Admin\Columns;
 
 use App;
 use SleepingOwl\Admin\Columns\Interfaces\ColumnInterface;
@@ -6,7 +8,7 @@ use Illuminate\Support\Arr;
 use SleepingOwl\Admin\Models\ModelItem;
 
 /**
- * Class Column
+ * Class Column.
  *
  * @method static \SleepingOwl\Admin\Columns\Column\Image image($name, $label = null)
  * @method static \SleepingOwl\Admin\Columns\Column\ColumnString string($name, $label = null)
@@ -20,50 +22,62 @@ use SleepingOwl\Admin\Models\ModelItem;
  */
 class Column
 {
-	/**
-	 * @var array
-	 */
-	protected static $handlers = [];
+    /**
+     * @var array
+     */
+    protected static $handlers = [];
 
-	/**
-	 * @param string $method
-	 * @param $params
-	 * @return ColumnInterface
-	 */
-	public static function __callStatic($method, $params)
-	{
-		$column = null;
-		if ($handler = static::getHandler($method))
-		{
-			$column = App::make($handler, $params);
-		} else
-		{
-			$className = get_called_class() . '\\' . ucfirst($method);
-			$column = new $className(Arr::get($params, 0, null), Arr::get($params, 1, null));
-		}
-		if ( ! $column->isHidden())
-		{
-			ModelItem::$current->addColumn($column);
-		}
+    /**
+     * @param string $method
+     * @param $params
+     *
+     * @return ColumnInterface
+     */
+    public static function __callStatic($method, $params)
+    {
+        $column = null;
+        if ($handler = static::getHandler($method)) {
+            $column = App::make($handler, $params);
+        } else {
+            $className = get_called_class().'\\'.ucfirst($method);
+            $column = new $className(Arr::get($params, 0, null), Arr::get($params, 1, null));
+        }
+        if (! $column->isHidden()) {
+            ModelItem::$current->addColumn($column);
+        }
 
-		return $column;
-	}
+        return $column;
+    }
 
-	/**
-	 * @param $name
-	 * @param string $handler
-	 */
-	public static function register($name, $handler)
-	{
-		static::$handlers[$name] = $handler;
-	}
+    /**
+     * PHP7 support # Cannot use 'String' as class name as it is reserved.
+     *
+     * @param $name
+     * @param null $label
+     *
+     * @return ColumnInterface
+     */
+    public static function string($name, $label = null)
+    {
+        return self::__callStatic('ColumnString', func_get_args());
+    }
 
-	/**
-	 * @param $method
-	 * @return string|null
-	 */
-	protected static function getHandler($method)
-	{
-		return Arr::get(static::$handlers, $method, null);
-	}
+    /**
+     * @param $name
+     * @param string $handler
+     */
+    public static function register($name, $handler)
+    {
+        static::$handlers[$name] = $handler;
+    }
+
+    /**
+     * @param $method
+     *
+     * @return string|null
+     */
+    protected static function getHandler($method)
+    {
+        return Arr::get(static::$handlers, $method, null);
+    }
 }
