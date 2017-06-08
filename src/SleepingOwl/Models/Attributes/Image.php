@@ -3,7 +3,6 @@
 use Config;
 use Illuminate\Support\Facades\File as IlluminateFile;
 use Illuminate\Support\Str;
-use Intervention\Image\Facades\Image as InterventionImage;
 
 class Image
 {
@@ -112,7 +111,9 @@ class Image
 	 */
 	public function thumbnail($template)
 	{
-		if ( ! $this->exists()) return null;
+		// Don't check for existence here but in the view
+		// if ( ! $this->exists()) return null;
+		
 		return route('imagecache', [
 			$template,
 			$this->getPath()
